@@ -1,310 +1,124 @@
 
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="it">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Naomi — Obey to Escape</title>
+<meta charset="UTF-8">
+<title>Gioco a Premi - Naomi</title>
 <style>
-  :root{--pink:#ff5ad6;--pink-2:#ff89d6;--bg:#000;--glass:rgba(255,255,255,0.02)}
-  *{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--pink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
-  .wrap{max-width:980px;margin:20px auto;padding:24px;border-radius:12px;position:relative;overflow:hidden}
-  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
-  h1{ text-align:center;color:var(--pink-2);text-transform:uppercase;letter-spacing:4px;margin:6px 0 14px;font-size:22px;text-shadow:0 0 18px rgba(255,90,214,.12) }
-  .typer{font-family:monospace;font-size:15px;line-height:1.8;min-height:86px;color:var(--pink-2)}
-  .btn{display:inline-block;padding:10px 16px;border-radius:999px;border:1px solid rgba(255,90,214,.18);background:transparent;color:#fff;cursor:pointer;text-transform:uppercase}
-  .btn.loud{background:linear-gradient(90deg,var(--pink),var(--pink-2));color:#100;border:none;box-shadow:0 10px 40px rgba(255,90,214,.08)}
-  .center{text-align:center}
-  .hidden{display:none}
-  .preview{width:100%;height:320px;border-radius:10px;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;margin:12px 0}
-  .preview img{width:100%;height:100%;object-fit:cover;filter:grayscale(0);}
-  .doors{display:flex;gap:12px;justify-content:center;margin-top:12px}
-  .door{width:30%;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid rgba(255,90,214,.06);text-align:center}
-  input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,.5);color:#ffb7e6}
-  .message{padding:10px;background:rgba(255,90,214,0.04);border-radius:8px;margin-top:8px}
-  .small{font-size:13px;color:#ffb7e6;opacity:.9}
-  .glitch-text{position:relative;display:inline-block}
-  .flash{position:absolute;inset:0;background:linear-gradient(90deg, rgba(255,90,214,0.06), rgba(255,137,214,0.06));mix-blend-mode:screen;pointer-events:none;opacity:0;transition:opacity .25s}
-  .flash.show{opacity:1}
+  body {
+    background: #000;
+    color: #fff;
+    text-align: center;
+    font-family: sans-serif;
+  }
+  img {
+    max-width: 80%;
+    margin: 10px auto;
+    display: block;
+  }
+  button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  #glitch {
+    display: none;
+    color: #f00;
+    font-size: 24px;
+    animation: flicker 0.1s infinite;
+  }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap card" id="app">
-  <h1>Naomi — Obey to Escape</h1>
-  <div id="screen">
-    <div id="intro">
-      <div class="typer" id="typerArea"></div>
-      <div class="center" style="margin-top:12px">
-        <button class="btn loud" id="enterBtn">ENTER THE ROOM</button>
-      </div>
-    </div>
 
-    <div id="level1" class="hidden">
-      <div class="small">Level 1 — Find the right letters and form the name.</div>
-      <div class="preview" id="l1preview"></div>
-      <div style="margin-top:12px">
-        <div id="letters" class="center"></div>
-        <div style="margin-top:12px" class="center">
-          <input type="text" id="l1input" placeholder="Type the name you formed" />
-          <div style="height:10px"></div>
-          <button class="btn loud" id="l1check">Submit</button>
-        </div>
-      </div>
-      <div class="message" id="l1msg" style="display:none"></div>
-    </div>
+<h1>Benvenuto al Gioco a Premi!</h1>
 
-    <div id="level2" class="hidden">
-      <div class="small">Level 2 — Choose the correct door to approach the throne.</div>
-      <div class="preview" id="l2preview"></div>
-      <div class="doors" id="doors"></div>
-      <div class="center" style="margin-top:12px">
-        <button class="btn" id="openThrone">OPEN THRONE</button>
-      </div>
-      <div class="message" id="afterThrone" style="display:none;margin-top:12px">
-        <div>Tribute required. Visit the Throne and send your offering. When done, enter the password I give you to continue.</div>
-        <div style="height:8px"></div>
-        <div class="small">Throne: <a href="https://throne.com/goddessnaomi2d" target="_blank" rel="noopener noreferrer">https://throne.com/goddessnaomi2d</a></div>
-        <div style="height:8px"></div>
-        <input type="text" id="pwInput" placeholder="Enter password here" />
-        <div style="height:8px"></div>
-        <button class="btn loud" id="pwCheck">Submit password</button>
-        <div id="pwMsg" class="small" style="margin-top:8px;display:block;color:#ffb7e6"></div>
-      </div>
-    </div>
+<!-- Gioco 1 -->
+<div id="game1">
+  <h2>Gioco 1 (Media)</h2>
+  <button onclick="completeGame(1)">Completa Gioco 1</button>
+  <div id="images1"></div>
+</div>
 
-    <div id="unlock" class="hidden center">
-      <div id="unlockText" class="typer"></div>
-    </div>
+<!-- Gioco 2 -->
+<div id="game2">
+  <h2>Gioco 2 (Difficile)</h2>
+  <button onclick="completeGame(2)" disabled>Completa Gioco 2</button>
+  <div id="images2"></div>
+</div>
 
-    <div id="level3" class="hidden">
-      <div class="small">Level 3 — Final Test.</div>
-      <div class="preview" id="l3preview"></div>
-      <div style="margin-top:12px" class="center">
-        <input type="text" id="l3input" placeholder="Type 'SUBMIT' to finish" />
-        <div style="height:8px"></div>
-        <button class="btn loud" id="l3check">Finish</button>
-      </div>
-      <div id="finalMsg" class="message hidden"></div>
-    </div>
-
+<!-- Gioco 3 -->
+<div id="game3">
+  <h2>Gioco 3 (Molto difficile)</h2>
+  <input type="password" id="password3" placeholder="Inserisci la password" />
+  <button onclick="unlockGame3()" disabled>Accedi al Gioco 3</button>
+  <div id="glitch">
+    <p>Congratulations, you’ve unlocked the third game~</p>
+    <p>You’ve earned your place… now let’s see if you can keep it, pet.</p>
   </div>
-  <div class="flash" id="flash"></div>
+  <div id="images3"></div>
 </div>
 
 <script>
-const PW = "Naomiisyourway";
-const assets = {"level1": ["assets/images/lvl1_img1.png"], "level2": ["assets/images/lvl2_img1.png", "assets/images/lvl2_img2.png"], "level3": ["assets/images/lvl3_img1.png", "assets/images/lvl3_img2.png", "assets/images/lvl3_img3.png", "assets/images/lvl3_img4.png", "assets/images/lvl3_img5.png", "assets/images/lvl3_img6.png"]}
-const stateKey = "naomi_escape_state_v1";
-let state = JSON.parse(localStorage.getItem(stateKey) || "{}");
-function saveState(){ localStorage.setItem(stateKey, JSON.stringify(state)); }
+const images = {
+  1: ['immagine_g1_1.jpg', 'immagine_g1_2.jpg'], // sostituire con i nomi reali
+  2: ['immagine_g2_1.jpg', 'immagine_g2_2.jpg'],
+  3: ['immagine_g3_1.jpg', 'immagine_g3_2.jpg']
+};
 
-function typeLines(target, lines, speed=40, cb){
-  target.innerHTML = "";
-  let i=0, line=0;
-  function nextChar(){
-    if(line>=lines.length){ if(cb) cb(); return; }
-    if(i<lines[line].length){
-      target.innerHTML += lines[line][i];
-      i++;
-      setTimeout(nextChar, speed);
-    } else {
-      target.innerHTML += "<br/>";
-      line++; i=0;
-      setTimeout(nextChar, speed);
-    }
+function completeGame(gameNumber) {
+  const container = document.getElementById(`images${gameNumber}`);
+  images[gameNumber].forEach(src => {
+    const img = document.createElement('img');
+    img.src = `./immagini_gioco${gameNumber}/${src}`;
+    container.appendChild(img);
+  });
+
+  // Abilita il gioco successivo
+  if (gameNumber === 2) {
+    // Terzo gioco rimane bloccato fino alla password
+    document.querySelector(`#game3 button`).disabled = false;
+  } else if (gameNumber < 2) {
+    document.querySelector(`#game${gameNumber + 1} button`).disabled = false;
   }
-  nextChar();
+
+  // Disabilita il pulsante attuale
+  document.querySelector(`#game${gameNumber} button`).disabled = true;
 }
 
-function playGlitch(){
-  try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = "sawtooth";
-    o.frequency.value = 880;
-    g.gain.value = 0.02;
-    o.connect(g); g.connect(ctx.destination);
-    o.start(0);
-    setTimeout(()=>{ o.frequency.value = 440; g.gain.value = 0.01; }, 80);
-    setTimeout(()=>{ o.stop(); ctx.close(); }, 180);
-  }catch(e){}
-}
-
-const typer = document.getElementById("typerArea");
-const enterBtn = document.getElementById("enterBtn");
-typeLines(typer, [
-  "Connecting to Naomi's network...",
-  "Accessing control system...",
-  "Connection established.",
-  "",
-  "You want to play? Then obey.",
-  "There are three rooms.",
-  "Each one will test your mind — and your devotion."
-], 28);
-
-enterBtn.addEventListener("click", ()=>{
-  document.getElementById("intro").classList.add("hidden");
-  showLevel1();
-});
-
-function showLevel1(){
-  state.level=1; saveState();
-  const el = document.getElementById("level1");
-  el.classList.remove("hidden");
-  const pv = document.getElementById("l1preview");
-  pv.innerHTML = "";
-  if(assets.level1.length>0){
-    const img = document.createElement("img");
-    img.src = assets.level1[0];
-    pv.appendChild(img);
+// Funzione per sbloccare il gioco 3 con password
+function unlockGame3() {
+  const input = document.getElementById('password3');
+  if (input.value === 'Naomiisyourway') {
+    document.getElementById('glitch').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('glitch').style.display = 'none';
+      showImages3();
+    }, 5000); // effetto glitch 5 secondi
   } else {
-    pv.innerHTML = "<div class='small'>[Image missing]</div>";
+    alert('Password errata!');
   }
-  const target = document.getElementById("letters");
-  const word = "NAOMI";
-  let letters = word.split('').sort(()=>Math.random()-0.5);
-  target.innerHTML = letters.map(l=>`<button class="btn" style="margin:4px;padding:10px 12px" data-letter="${l}">${l}</button>`).join('');
-  let formed = "";
-  target.querySelectorAll("button").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      formed += b.dataset.letter;
-      document.getElementById("l1input").value = formed;
-    });
+}
+
+// Mostra immagini gioco 3
+function showImages3() {
+  const container = document.getElementById('images3');
+  images[3].forEach(src => {
+    const img = document.createElement('img');
+    img.src = `./immagini_gioco3/${src}`;
+    container.appendChild(img);
   });
-  document.getElementById("l1check").onclick = ()=>{
-    const val = document.getElementById("l1input").value.trim().toUpperCase();
-    if(val==="NAOMI"){
-      document.getElementById("l1msg").style.display="block";
-      document.getElementById("l1msg").innerText = "Access key found. Proceed to the next room.";
-      setTimeout(()=>{ el.classList.add("hidden"); showLevel2(); }, 900);
-    } else {
-      document.getElementById("l1msg").style.display="block";
-      document.getElementById("l1msg").innerText = "Access denied. Try again.";
-    }
-  };
-}
 
-function showLevel2(){
-  state.level=2; saveState();
-  const el = document.getElementById("level2");
-  el.classList.remove("hidden");
-  const pv = document.getElementById("l2preview");
-  pv.innerHTML = "";
-  if(assets.level2.length>0){
-    const img = document.createElement("img");
-    img.src = assets.level2[0];
-    pv.appendChild(img);
-  } else pv.innerHTML="[Image missing]";
-  const doors = document.getElementById("doors");
-  doors.innerHTML = "";
-  const doorCount = Math.max(3, assets.level2.length);
-  for(let i=0;i<3;i++){
-    const d = document.createElement("div");
-    d.className="door";
-    d.dataset.idx = i;
-    const inner = document.createElement("div");
-    inner.innerHTML = `<div style="height:140px;overflow:hidden;border-radius:6px;margin-bottom:8px"><img src="${assets.level2[i]||assets.level2[0]||''}" style="width:100%;height:100%;object-fit:cover"/></div><div class="small">Door ${i+1}</div>`;
-    d.appendChild(inner);
-    doors.appendChild(d);
-    d.addEventListener("click", ()=>{
-      if(i===1){
-        d.style.border = "2px solid rgba(255,90,214,.5)";
-        setTimeout(()=>{ document.getElementById("l2preview").innerHTML = "<div class='small'>You approach the throne...</div>"; showThronePrompt(); }, 700);
-      } else {
-        d.style.opacity = 0.6;
-        const msg = document.getElementById("l1msg");
-        if(msg){ msg.style.display="block"; msg.innerText="Wrong door. Try another."; setTimeout(()=>{ msg.style.display="none"; },900); }
-      }
-    });
-  }
+  // Disabilita pulsante e input
+  document.querySelector(`#game3 button`).disabled = true;
+  document.getElementById('password3').disabled = true;
 }
-
-function showThronePrompt(){
-  const after = document.getElementById("afterThrone");
-  after.style.display = "block";
-  document.getElementById("openThrone").onclick = ()=>{
-    window.open("https://throne.com/goddessnaomi2d", "_blank");
-    document.getElementById("pwMsg").innerText = "Send your tribute on Throne. Then enter the password Naomi will give you.";
-  };
-  document.getElementById("pwCheck").onclick = ()=>{
-    const v = document.getElementById("pwInput").value.trim();
-    if(v===PW){
-      document.getElementById("level2").classList.add("hidden");
-      triggerUnlockSequence();
-    } else {
-      document.getElementById("pwMsg").innerText = "Access denied. Incorrect password.";
-    }
-  };
-}
-
-function triggerUnlockSequence(){
-  playGlitch();
-  const flash = document.getElementById("flash");
-  flash.classList.add("show");
-  setTimeout(()=>{ flash.classList.remove("show"); }, 500);
-  const unlock = document.getElementById("unlock");
-  unlock.classList.remove("hidden");
-  const ut = document.getElementById("unlockText");
-  typeLines(ut, [
-    "Access granted...",
-    "You've unlocked Level 3. 💋",
-    "You did well, little one.",
-    "Now prove you deserve to see more..."
-  ], 36, ()=>{
-    unlock.classList.add("hidden");
-    showLevel3();
-  });
-}
-
-function showLevel3(){
-  state.level=3; saveState();
-  const el = document.getElementById("level3");
-  el.classList.remove("hidden");
-  const pv = document.getElementById("l3preview");
-  pv.innerHTML = "";
-  const imgs = assets.level3 || [];
-  if(imgs.length>0){
-    const imgEl = document.createElement("img");
-    imgEl.src = imgs[0];
-    pv.appendChild(imgEl);
-  } else pv.innerHTML="[Images missing]";
-  document.getElementById("l3check").onclick = ()=>{
-    const v = document.getElementById("l3input").value.trim().toUpperCase();
-    if(v==="SUBMIT"){
-      showFinalSequence();
-    } else {
-      alert("You must type SUBMIT.");
-    }
-  };
-}
-
-function showFinalSequence(){
-  const pv = document.getElementById("l3preview");
-  pv.innerHTML = "";
-  const imgs = assets.level3;
-  let i=0;
-  function next(){
-    if(i>=imgs.length){
-      document.getElementById("finalMsg").classList.remove("hidden");
-      document.getElementById("finalMsg").innerText = "You've earned what you craved... for now. ~ Naomi ~";
-      return;
-    }
-    pv.innerHTML = '<img src="'+imgs[i]+'" />';
-    playGlitch();
-    document.getElementById("flash").classList.add("show");
-    setTimeout(()=>{ document.getElementById("flash").classList.remove("show"); }, 350);
-    i++;
-    setTimeout(next, 900);
-  }
-  next();
-}
-
-window.addEventListener("DOMContentLoaded", ()=>{
-  if(state.level===1) showLevel1();
-  if(state.level===2) showLevel2();
-  if(state.level===3) showLevel3();
-});
 </script>
+
 </body>
 </html>
