@@ -1,124 +1,147 @@
 
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Gioco a Premi - Naomi</title>
-<style>
-  body {
-    background: #000;
-    color: #fff;
-    text-align: center;
-    font-family: sans-serif;
-  }
-  img {
-    max-width: 80%;
-    margin: 10px auto;
-    display: block;
-  }
-  button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  #glitch {
-    display: none;
-    color: #f00;
-    font-size: 24px;
-    animation: flicker 0.1s infinite;
-  }
-  @keyframes flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escape Room Naomi</title>
+  <style>
+    body {
+      background-color: black;
+      color: red;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    .hidden { display: none; }
+    #game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    input {
+      background: black;
+      border: 1px solid red;
+      color: red;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 18px;
+      text-align: center;
+    }
+    button {
+      background: red;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    img {
+      max-height: 90vh;
+      max-width: 90vw;
+      margin: 10px auto;
+      border: 2px solid red;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
-
-<h1>Benvenuto al Gioco a Premi!</h1>
-
-<!-- Gioco 1 -->
-<div id="game1">
-  <h2>Gioco 1 (Media)</h2>
-  <button onclick="completeGame(1)">Completa Gioco 1</button>
-  <div id="images1"></div>
-</div>
-
-<!-- Gioco 2 -->
-<div id="game2">
-  <h2>Gioco 2 (Difficile)</h2>
-  <button onclick="completeGame(2)" disabled>Completa Gioco 2</button>
-  <div id="images2"></div>
-</div>
-
-<!-- Gioco 3 -->
-<div id="game3">
-  <h2>Gioco 3 (Molto difficile)</h2>
-  <input type="password" id="password3" placeholder="Inserisci la password" />
-  <button onclick="unlockGame3()" disabled>Accedi al Gioco 3</button>
-  <div id="glitch">
-    <p>Congratulations, you’ve unlocked the third game~</p>
-    <p>You’ve earned your place… now let’s see if you can keep it, pet.</p>
+  <div id="game-container">
+    <h1>Escape Room ~ Naomi</h1>
+    <p id="text">Level 1: The beginning... Can you guess the code?</p>
+    <input type="text" id="answer" placeholder="Enter your answer" />
+    <button onclick="checkAnswer()">Submit</button>
   </div>
-  <div id="images3"></div>
-</div>
 
-<script>
-const images = {
-  1: ['immagine_g1_1.jpg', 'immagine_g1_2.jpg'], // sostituire con i nomi reali
-  2: ['immagine_g2_1.jpg', 'immagine_g2_2.jpg'],
-  3: ['immagine_g3_1.jpg', 'immagine_g3_2.jpg']
-};
+  <script>
+    const container = document.getElementById('game-container');
+    const text = document.getElementById('text');
+    const input = document.getElementById('answer');
 
-function completeGame(gameNumber) {
-  const container = document.getElementById(`images${gameNumber}`);
-  images[gameNumber].forEach(src => {
-    const img = document.createElement('img');
-    img.src = `./immagini_gioco${gameNumber}/${src}`;
-    container.appendChild(img);
-  });
+    let currentLevel = 1;
+    let currentImages = [];
+    let showingImages = false;
 
-  // Abilita il gioco successivo
-  if (gameNumber === 2) {
-    // Terzo gioco rimane bloccato fino alla password
-    document.querySelector(`#game3 button`).disabled = false;
-  } else if (gameNumber < 2) {
-    document.querySelector(`#game${gameNumber + 1} button`).disabled = false;
-  }
+    // Define answers for each level
+    const answers = {
+      1: 'key',
+      2: 'shadow',
+      3: 'freedom'
+    };
 
-  // Disabilita il pulsante attuale
-  document.querySelector(`#game${gameNumber} button`).disabled = true;
-}
+    function checkAnswer() {
+      if (showingImages) return;
+      const userAnswer = input.value.trim().toLowerCase();
+      if (userAnswer === answers[currentLevel]) {
+        showImagesForLevel(currentLevel);
+      } else {
+        // Restart same level
+        text.innerText = `Wrong answer. Try again from the start of Level ${currentLevel}.`;
+        setTimeout(() => startLevel(currentLevel), 2000);
+      }
+    }
 
-// Funzione per sbloccare il gioco 3 con password
-function unlockGame3() {
-  const input = document.getElementById('password3');
-  if (input.value === 'Naomiisyourway') {
-    document.getElementById('glitch').style.display = 'block';
-    setTimeout(() => {
-      document.getElementById('glitch').style.display = 'none';
-      showImages3();
-    }, 5000); // effetto glitch 5 secondi
-  } else {
-    alert('Password errata!');
-  }
-}
+    function startLevel(level) {
+      showingImages = false;
+      container.innerHTML = `
+        <h1>Escape Room ~ Naomi</h1>
+        <p id="text">Level ${level}: ${levelText(level)}</p>
+        <input type="text" id="answer" placeholder="Enter your answer" />
+        <button onclick="checkAnswer()">Submit</button>
+      `;
+    }
 
-// Mostra immagini gioco 3
-function showImages3() {
-  const container = document.getElementById('images3');
-  images[3].forEach(src => {
-    const img = document.createElement('img');
-    img.src = `./immagini_gioco3/${src}`;
-    container.appendChild(img);
-  });
+    function levelText(level) {
+      if (level === 1) return "The beginning... Can you guess the code?";
+      if (level === 2) return "The second gate... What hides in the dark?";
+      if (level === 3) return "Final challenge... Only the worthy escape.";
+      return "";
+    }
 
-  // Disabilita pulsante e input
-  document.querySelector(`#game3 button`).disabled = true;
-  document.getElementById('password3').disabled = true;
-}
-</script>
+    async function showImagesForLevel(level) {
+      showingImages = true;
+      container.innerHTML = `<p>Level ${level} cleared... Enjoy your reward 😈</p>`;
+      const folder = `gioco${level}`;
+      try {
+        // Fetch image list dynamically (works on most hosting like GitHub Pages if images are accessible)
+        const imageList = await fetchImages(folder);
+        for (let img of imageList) {
+          container.innerHTML = `<img src="${folder}/${img}" alt="Reward Image">`;
+          await new Promise(r => setTimeout(r, 5000)); // 5 seconds per image
+        }
+      } catch {
+        container.innerHTML = `<p>Error loading images for Level ${level}.</p>`;
+      }
+      nextLevel(level);
+    }
 
+    async function fetchImages(folder) {
+      // Manual lists (in case directory listing is disabled)
+      if (folder === 'gioco1')
+        return ['00021-82332019.png'];
+      if (folder === 'gioco2')
+        return ['00004-3322706282.png', '00025-1170554781.png'];
+      if (folder === 'gioco3')
+        return ['00014-4236161737.png', '00019-44953898.png', '00022-2895341385.png', '00026-981262183.png', '00059-1723081275.png', '00065-1723081281.png'];
+      return [];
+    }
+
+    function nextLevel(level) {
+      if (level < 3) {
+        currentLevel++;
+        setTimeout(() => startLevel(currentLevel), 2000);
+      } else {
+        container.innerHTML = `
+          <h2>You survived... for now. 🔥</h2>
+          <p>Naomi is watching. 👁️</p>
+        `;
+      }
+    }
+  </script>
 </body>
 </html>
